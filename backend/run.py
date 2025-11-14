@@ -22,11 +22,13 @@ def main():
     print(f"Debug: {settings.debug}")
     print("-" * 50)
     
+    # Note: reload mode disabled on Windows due to multiprocessing issues
+    # For development with auto-reload, run: uvicorn src.main:app --reload
     uvicorn.run(
         "src.main:app",
         host=settings.api_host,
         port=settings.api_port,
-        reload=settings.debug,
+        reload=False,  # Disabled for Windows compatibility
         log_level="info",
         access_log=True
     )

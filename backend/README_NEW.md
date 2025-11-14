@@ -43,7 +43,7 @@ FastAPI Endpoint
 AgentOrchestrator (LangGraph)
     ↓
 ┌────────────────────────────────────────┐
-│ 1. QueryUnderstandingAgent            │
+│ 1. QueryUnderstandingAgent             │
 │    → Intent & Entity Extraction        │
 │ 2. DataRetrievalAgent                  │
 │    → Cosmos DB + Vector Search         │
