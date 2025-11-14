@@ -1,0 +1,56 @@
+# Core Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# LangChain/LangGraph - using flexible versions
+langchain>=0.1.0
+langchain-openai>=0.0.2
+langchain-google-genai>=0.0.5
+langchain-anthropic>=0.0.1
+langgraph>=0.0.20
+langsmith>=0.0.77
+
+# Vector Store & Embeddings
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# Azure Cosmos DB
+azure-cosmos>=4.5.0
+azure-identity>=1.15.0
+
+# MCP (Model Context Protocol)
+mcp>=1.0.0
+
+# API & Networking
+httpx>=0.25.0
+websockets>=12.0
+python-multipart>=0.0.6
+
+# Environment & Configuration
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# Logging & Monitoring
+structlog>=23.0.0
+python-json-logger>=2.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-httpx>=0.21.0
+
+# Type Checking
+mypy>=1.7.0
+types-pyyaml>=6.0.0
+
+# Code Quality
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.0.0
+
+# Utilities
+python-dateutil>=2.8.0
+tenacity>=8.0.0

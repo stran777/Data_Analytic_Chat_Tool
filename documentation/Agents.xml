@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-11-03T00:00:00.000Z" agent="5.0 (Compatible)" etag="W/&#34;1&#34;">
+  <diagram name="Agents Diagram" id="agents-diagram-1">
+    <mxGraphModel dx="1206" dy="690" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Left column sticky notes -->
+        <mxCell id="note1" value="SSO auth&#xa;MS Entra ID" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D6BBFF;strokeColor=#C39BFF;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="24" width="200" height="110" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note2" value="UI responsive chat style&#xa;multi-turn conversations&#xa;content mgmt (maintaining chat history and exporting)&#xa;visualization capabilities" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D6BBFF;strokeColor=#C39BFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="24" y="240" width="240" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note3" value="Models&#xa;Host agent - OpenAI" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D6BBFF;strokeColor=#C39BFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="24" y="420" width="200" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Left-most user and flow -->
+        <mxCell id="user" value="User" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="260" y="60" width="60" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="frontend" value="Front-end App (client)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="340" y="68" width="160" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="a2a" value="A2A" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="78" width="50" height="36" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="host" value="Host/Orchestrator agent (server)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="590" y="54" width="220" height="72" as="geometry"/>
+        </mxCell>
+
+        <!-- MCP connector and MCP registry -->
+        <mxCell id="mcp_connector" value="MCP connector (client)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="840" y="40" width="200" height="72" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mcp_servers" value="MCP servers list" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="720" y="8" width="140" height="48" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mcp_registry" value="MCP registry (config.json)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="8" width="140" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Remote tools box cluster -->
+        <mxCell id="rt1" value="Remote tool&#xa;(access CosmosDB)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="8" width="180" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rt2" value="Remote tool&#xa;(access semantic model)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="80" width="180" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rt3" value="Remote tool&#xa;(access VisionWeb DB)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="152" width="180" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Agent connectors stack -->
+        <mxCell id="delegate" value="delegate tasks" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="660" y="150" width="120" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agent_connector_1" value="Agent connector 1 (client)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="220" width="200" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agent_connector_2" value="Agent connector 2 (client)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="290" width="200" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agent_connector_n" value="Agent connector n (client)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="360" width="200" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Discovery / registry -->
+        <mxCell id="discovery" value="discovery/get agent list" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="500" width="180" height="56" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agent_registry" value="agent registry" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="820" y="500" width="140" height="56" as="geometry"/>
+        </mxCell>
+
+        <!-- Remote agents right column -->
+        <mxCell id="remote_agent_1" value="Remote agent&#xa;RAG to retrieve additional information/context." style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="220" width="260" height="72" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="remote_agent_2" value="Remote agent&#xa;predicting/recommending next questions (contextual conversation)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="304" width="260" height="72" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="remote_agent_3" value="Remote agent&#xa;charting/viz" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6B6B6B;fillColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="388" width="260" height="72" as="geometry"/>
+        </mxCell>
+
+        <!-- Safeguard sticky -->
+        <mxCell id="safe" value="Safeguard agent&#xa;guardrail on sensitive data&#xa;and preventing hallucination" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C46A6A;strokeColor=#8B3B3B;fontSize=11;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="980" y="500" width="220" height="84" as="geometry"/>
+        </mxCell>
+
+        <!-- Right-side purple note -->
+        <mxCell id="note_right" value="access restricted&#xa;skill or knowledge about this DB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D6BBFF;strokeColor=#C39BFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="24" width="220" height="96" as="geometry"/>
+        </mxCell>
+
+        <!-- Connectors (edges) -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B6B6B;" edge="1" source="user" target="frontend" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B6B6B;" edge="1" source="frontend" target="a2a" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B6B6B;" edge="1" source="a2a" target="host" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e4" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B6B6B;" edge="1" source="host" target="mcp_connector" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="mcp_servers" target="mcp_connector" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="mcp_connector" target="rt1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="mcp_connector" target="rt2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="mcp_connector" target="rt3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="host" target="delegate" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="delegate" target="agent_connector_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="agent_connector_1" target="remote_agent_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="agent_connector_2" target="remote_agent_2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="agent_connector_n" target="remote_agent_3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="host" target="discovery" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="discovery" target="agent_registry" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="agent_connector_1" target="agent_registry" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- small connecting lines from host down to discovery -->
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6B6B6B;" edge="1" source="host" target="agent_connector_1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
