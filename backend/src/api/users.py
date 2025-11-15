@@ -48,7 +48,6 @@ async def create_user(user_data: UserCreate):
             email=user_data.email,
             name=user_data.name,
             department=user_data.department,
-            role=user_data.role,
             preferences=user_data.preferences or UserPreferences()
         )
         
@@ -62,7 +61,7 @@ async def create_user(user_data: UserCreate):
             "name": created_user.name,
             "department": created_user.department,
             "role": created_user.role,
-            "preferences": created_user.preferences.dict(),
+            "preferences": created_user.preferences.model_dump(),
             "created_at": created_user.created_at
         }
         
@@ -103,9 +102,9 @@ async def get_user(user_id: str):
             "name": user.name,
             "department": user.department,
             "role": user.role,
-            "preferences": user.preferences.dict(),
+            "preferences": user.preferences.model_dump(),
             "created_at": user.created_at,
-            "last_login": user.last_login
+            "last_active": user.last_active
         }
         
     except HTTPException:
@@ -162,7 +161,7 @@ async def update_user_preferences(
         
         return {
             "id": updated_user.id,
-            "preferences": updated_user.preferences.dict()
+            "preferences": updated_user.preferences.model_dump()
         }
         
     except HTTPException:
@@ -196,9 +195,9 @@ async def record_login(user_id: str):
                 detail="User not found"
             )
         
-        # Update last login
+        # Update last active time
         from datetime import datetime
-        user.last_login = datetime.utcnow()
+        user.last_active = datetime.utcnow()
         await cosmos_service.update_user(user)
         
         logger.info(f"Recorded login for user: {user_id}")

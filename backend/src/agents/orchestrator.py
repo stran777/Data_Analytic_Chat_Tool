@@ -58,7 +58,6 @@ class AgentOrchestrator(LoggerMixin):
         workflow.set_entry_point("understand_query")
         workflow.add_edge("understand_query", "retrieve_data")
         workflow.add_edge("retrieve_data", "generate_response")
-        #workflow.add_edge("generate_response", END)
         workflow.add_edge("generate_response", "generate_recommendations")
         workflow.add_edge("generate_recommendations", END)
         

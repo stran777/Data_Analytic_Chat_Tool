@@ -148,16 +148,51 @@ class CosmosDBService(LoggerMixin):
     async def get_user(self, user_id: str) -> Optional[User]:
         """Get a user by ID."""
         try:
-            item = self.users_container.read_item(
-                item=user_id,
-                partition_key=user_id
-            )
-            return User(**item)
-        except exceptions.CosmosResourceNotFoundError:
-            self.logger.warning(f"User not found: {user_id}")
-            return None
+            # Try direct read first (faster if partition key matches)
+            try:
+                item = self.users_container.read_item(
+                    item=user_id,
+                    partition_key=user_id
+                )
+                return User(**item)
+            except exceptions.CosmosResourceNotFoundError:
+                # If direct read fails, try query (in case partition key doesn't match)
+                self.logger.info(f"Direct read failed for user {user_id}, trying query...")
+                query = "SELECT * FROM c WHERE c.id = @user_id"
+                parameters = [{"name": "@user_id", "value": user_id}]
+                
+                items = list(self.users_container.query_items(
+                    query=query,
+                    parameters=parameters,
+                    enable_cross_partition_query=True
+                ))
+                
+                if items:
+                    return User(**items[0])
+                
+                self.logger.warning(f"User not found: {user_id}")
+                return None
         except Exception as e:
             self.logger.error(f"Failed to get user: {e}")
+            raise
+    
+    async def get_user_by_email(self, email: str) -> Optional[User]:
+        """Get a user by email address."""
+        try:
+            query = "SELECT * FROM c WHERE c.email = @email"
+            parameters = [{"name": "@email", "value": email}]
+            
+            items = list(self.users_container.query_items(
+                query=query,
+                parameters=parameters,
+                enable_cross_partition_query=True
+            ))
+            
+            if items:
+                return User(**items[0])
+            return None
+        except Exception as e:
+            self.logger.error(f"Failed to get user by email: {e}")
             raise
     
     async def update_user(self, user: User) -> User:
