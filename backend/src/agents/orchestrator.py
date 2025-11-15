@@ -33,7 +33,7 @@ class AgentOrchestrator(LoggerMixin):
         self.query_understanding_agent = QueryUnderstandingAgent()
         self.data_retrieval_agent = DataRetrievalAgent()
         self.response_generation_agent = ResponseGenerationAgent()
-        #self.recommendation_agent = RecommendationAgent()
+        self.recommendation_agent = RecommendationAgent()
         
         # Build the workflow graph
         self.workflow = self._build_workflow()
@@ -52,15 +52,15 @@ class AgentOrchestrator(LoggerMixin):
         workflow.add_node("understand_query", self.query_understanding_agent)
         workflow.add_node("retrieve_data", self.data_retrieval_agent)
         workflow.add_node("generate_response", self.response_generation_agent)
-        #workflow.add_node("generate_recommendations", self.recommendation_agent)
+        workflow.add_node("generate_recommendations", self.recommendation_agent)
         
         # Define the flow
         workflow.set_entry_point("understand_query")
         workflow.add_edge("understand_query", "retrieve_data")
         workflow.add_edge("retrieve_data", "generate_response")
-        workflow.add_edge("generate_response", END)
-        #workflow.add_edge("generate_response", "generate_recommendations")
-        #workflow.add_edge("generate_recommendations", END)
+        #workflow.add_edge("generate_response", END)
+        workflow.add_edge("generate_response", "generate_recommendations")
+        workflow.add_edge("generate_recommendations", END)
         
         # Compile the graph
         compiled_workflow = workflow.compile()
