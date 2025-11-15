@@ -34,7 +34,7 @@ class RecommendationAgent(BaseAgent):
             Updated state with recommendations
         """
         user_query = state.get("user_query", "")
-        query_analysis = state.get("query_analysis", {})
+        query_analysis = state.get("query_analysis") or {}
         response = state.get("response", "")
         conversation_history = state.get("conversation_history", [])
         
@@ -62,7 +62,7 @@ Example: ["What were the sales trends for Q3?", "How does this compare to last y
             # Build context for recommendations
             context_parts = [
                 f"Current query: {user_query}",
-                f"Query type: {query_analysis.get('query_type', 'general')}",
+                f"Query type: {query_analysis.get('query_type', 'general') if query_analysis else 'general'}",
             ]
             
             if response:
@@ -135,12 +135,12 @@ Example: ["What were the sales trends for Q3?", "How does this compare to last y
         Get fallback suggestions when generation fails.
         
         Args:
-            query_analysis: Query analysis information
+            query_analysis: Query analysis information (may be None or empty)
             
         Returns:
             List of generic suggestions
         """
-        query_type = query_analysis.get("query_type", "general")
+        query_type = (query_analysis or {}).get("query_type", "general")
         
         fallback_map = {
             "analytical": [

@@ -33,7 +33,7 @@ class AgentOrchestrator(LoggerMixin):
         self.query_understanding_agent = QueryUnderstandingAgent()
         self.data_retrieval_agent = DataRetrievalAgent()
         self.response_generation_agent = ResponseGenerationAgent()
-        self.recommendation_agent = RecommendationAgent()
+        #self.recommendation_agent = RecommendationAgent()
         
         # Build the workflow graph
         self.workflow = self._build_workflow()
@@ -45,21 +45,22 @@ class AgentOrchestrator(LoggerMixin):
         Returns:
             Compiled workflow graph
         """
-        # Create the graph
-        workflow = StateGraph(AgentState)
+        # Create the graph - use dict for state type
+        workflow = StateGraph(dict)
         
         # Add nodes for each agent
         workflow.add_node("understand_query", self.query_understanding_agent)
         workflow.add_node("retrieve_data", self.data_retrieval_agent)
         workflow.add_node("generate_response", self.response_generation_agent)
-        workflow.add_node("generate_recommendations", self.recommendation_agent)
+        #workflow.add_node("generate_recommendations", self.recommendation_agent)
         
         # Define the flow
         workflow.set_entry_point("understand_query")
         workflow.add_edge("understand_query", "retrieve_data")
         workflow.add_edge("retrieve_data", "generate_response")
-        workflow.add_edge("generate_response", "generate_recommendations")
-        workflow.add_edge("generate_recommendations", END)
+        workflow.add_edge("generate_response", END)
+        #workflow.add_edge("generate_response", "generate_recommendations")
+        #workflow.add_edge("generate_recommendations", END)
         
         # Compile the graph
         compiled_workflow = workflow.compile()
@@ -102,7 +103,19 @@ class AgentOrchestrator(LoggerMixin):
         
         try:
             # Run the workflow
+            self.logger.info("Invoking workflow...")
             final_state = await self.workflow.ainvoke(initial_state)
+            
+            # Check if final_state is None or invalid
+            if final_state is None:
+                self.logger.error("Workflow returned None state")
+                return {
+                    "response": "I apologize, but I encountered an error processing your query. Please try again.",
+                    "suggestions": [],
+                    "metadata": {"error": "Workflow returned None"}
+                }
+            
+            self.logger.info(f"Workflow completed. Final state keys: {list(final_state.keys())}")
             
             # Extract results
             result = {
@@ -119,7 +132,7 @@ class AgentOrchestrator(LoggerMixin):
             return result
             
         except Exception as e:
-            self.logger.error(f"Error in workflow execution: {e}")
+            self.logger.error(f"Error in workflow execution: {e}", exc_info=True)
             return {
                 "response": "I apologize, but I encountered an error processing your query. Please try again.",
                 "suggestions": [],

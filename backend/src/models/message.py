@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 
 class MessageRole(str, Enum):
@@ -19,16 +19,17 @@ class MessageRole(str, Enum):
 class Message(BaseModel):
     """Chat message model."""
     
+    model_config = ConfigDict()
+    
     id: str = Field(default_factory=lambda: str(uuid4()))
     role: MessageRole
     content: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     metadata: Dict[str, Any] = Field(default_factory=dict)
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-        }
+    @field_serializer('timestamp')
+    def serialize_timestamp(self, dt: datetime, _info):
+        return dt.isoformat()
 
 
 class MessageCreate(BaseModel):

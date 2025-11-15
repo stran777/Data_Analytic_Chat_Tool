@@ -2,10 +2,10 @@
 Chat API endpoints.
 """
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from src.agents import get_orchestrator
 from src.models import Conversation, Message, MessageCreate, MessageResponse, MessageRole
@@ -25,7 +25,10 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     """Response model for chat endpoint."""
-    message: Message
+    
+    model_config = ConfigDict()
+    
+    message: Message  # Changed back to Message type
     suggestions: list[str]
     conversation_id: str
     context_used: bool

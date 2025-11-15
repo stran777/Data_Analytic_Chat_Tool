@@ -36,9 +36,12 @@ async def readiness_check():
         # Check Cosmos DB connection
         cosmos_healthy = False
         try:
-            # Simple check - try to list databases
-            await cosmos_service.cosmos_client.read_all_databases()
-            cosmos_healthy = True
+            # Simple check - verify client exists and try to list databases
+            if cosmos_service.client:
+                list(cosmos_service.client.list_databases())
+                cosmos_healthy = True
+            else:
+                logger.warning("Cosmos DB client not initialized")
         except Exception as e:
             logger.error(f"Cosmos DB health check failed: {e}")
         

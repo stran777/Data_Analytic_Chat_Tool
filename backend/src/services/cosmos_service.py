@@ -179,6 +179,10 @@ class CosmosDBService(LoggerMixin):
     ) -> List[Dict[str, Any]]:
         """Execute a query against financial data."""
         try:
+            self.logger.info(f"Executing Cosmos DB query: {query}")
+            if parameters:
+                self.logger.info(f"Query parameters: {parameters}")
+            
             items = list(self.financial_data_container.query_items(
                 query=query,
                 parameters=parameters or [],

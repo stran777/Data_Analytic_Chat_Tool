@@ -103,6 +103,9 @@ class DataRetrievalAgent(BaseAgent):
             # Simple query example
             cosmos_query = "SELECT TOP 100 * FROM c ORDER BY c.timestamp DESC"
             
+            # Log the SQL query
+            self.logger.info(f"Cosmos DB SQL Query: {cosmos_query}")
+            
             # Execute query
             results = await self.cosmos_service.query_financial_data(
                 query=cosmos_query

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 from src.models.message import Message
 
@@ -20,6 +20,8 @@ class ConversationStatus(str):
 class Conversation(BaseModel):
     """Conversation/Session model."""
     
+    model_config = ConfigDict()
+    
     id: str = Field(default_factory=lambda: str(uuid4()))
     user_id: str
     title: Optional[str] = None
@@ -32,10 +34,9 @@ class Conversation(BaseModel):
     # Partition key for Cosmos DB
     partition_key: Optional[str] = None
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-        }
+    @field_serializer('created_at', 'updated_at')
+    def serialize_dt(self, dt: datetime, _info):
+        return dt.isoformat()
     
     def add_message(self, message: Message) -> None:
         """Add a message to the conversation."""
@@ -67,6 +68,9 @@ class ConversationCreate(BaseModel):
 
 class ConversationResponse(BaseModel):
     """Response schema for conversations."""
+    
+    model_config = ConfigDict()
+    
     id: str
     user_id: str
     title: Optional[str]
@@ -75,3 +79,7 @@ class ConversationResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     last_message: Optional[Message] = None
+    
+    @field_serializer('created_at', 'updated_at')
+    def serialize_dt(self, dt: datetime, _info):
+        return dt.isoformat()

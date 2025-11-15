@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_serializer
 
 
 class UserPreferences(BaseModel):
@@ -22,6 +22,8 @@ class UserPreferences(BaseModel):
 class User(BaseModel):
     """User model."""
     
+    model_config = ConfigDict()
+    
     id: str = Field(default_factory=lambda: str(uuid4()))
     email: EmailStr
     name: str
@@ -34,10 +36,9 @@ class User(BaseModel):
     is_active: bool = True
     metadata: Dict[str, Any] = Field(default_factory=dict)
     
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-        }
+    @field_serializer('created_at', 'updated_at', 'last_active')
+    def serialize_dt(self, dt: Optional[datetime], _info):
+        return dt.isoformat() if dt else None
     
     def to_cosmos_dict(self) -> Dict[str, Any]:
         """Convert to Cosmos DB compatible dictionary."""
@@ -57,6 +58,9 @@ class UserCreate(BaseModel):
 
 class UserResponse(BaseModel):
     """Response schema for user data."""
+    
+    model_config = ConfigDict()
+    
     id: str
     email: EmailStr
     name: str
@@ -65,3 +69,7 @@ class UserResponse(BaseModel):
     created_at: datetime
     last_active: Optional[datetime]
     is_active: bool
+    
+    @field_serializer('created_at', 'last_active')
+    def serialize_dt(self, dt: Optional[datetime], _info):
+        return dt.isoformat() if dt else None

@@ -34,8 +34,8 @@ class ResponseGenerationAgent(BaseAgent):
             Updated state with generated response
         """
         user_query = state.get("user_query", "")
-        query_analysis = state.get("query_analysis", {})
-        retrieved_data = state.get("retrieved_data", {})
+        query_analysis = state.get("query_analysis") or {}
+        retrieved_data = state.get("retrieved_data") or {}
         conversation_history = state.get("conversation_history", [])
         
         self.logger.info("Generating response")
