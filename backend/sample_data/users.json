@@ -1,0 +1,20 @@
+[
+  {
+    "email": "alice@example.com",
+    "name": "Alice Johnson",
+    "preferences": {
+      "theme": "dark",
+      "notifications": true,
+      "language": "en"
+    }
+  },
+  {
+    "email": "charlie@example.com",
+    "name": "Charlie Brown",
+    "preferences": {
+      "theme": "light",
+      "notifications": false,
+      "language": "en"
+    }
+  }
+]

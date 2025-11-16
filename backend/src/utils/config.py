@@ -62,8 +62,8 @@ class Settings(BaseSettings):
         default="conversations", alias="COSMOS_CONTAINER_CONVERSATIONS"
     )
     cosmos_container_users: str = Field(default="users", alias="COSMOS_CONTAINER_USERS")
-    cosmos_container_financial_data: str = Field(
-        default="financial_data", alias="COSMOS_CONTAINER_FINANCIAL_DATA"
+    cosmos_container_gold: str = Field(
+        default="gold", alias="COSMOS_CONTAINER_GOLD"
     )
 
     # Vector Store

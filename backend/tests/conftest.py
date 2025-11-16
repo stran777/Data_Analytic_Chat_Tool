@@ -26,7 +26,7 @@ def mock_cosmos_service():
     service.create_conversation = AsyncMock()
     service.update_conversation = AsyncMock()
     service.list_conversations = AsyncMock(return_value=[])
-    service.query_financial_data = AsyncMock(return_value=[])
+    service.query_gold_data = AsyncMock(return_value=[])
     
     return service
 
