@@ -57,7 +57,7 @@ class DataRetrievalAgent(BaseAgent):
                 self.logger.info(f"Retrieved {len(rag_sources)} RAG sources")
             
             # Query financial data from Cosmos DB
-            financial_data = await self._query_financial_data(query_analysis)
+            financial_data = await self._query_gold_data(query_analysis)
             retrieved_data["financial_data"] = financial_data
             self.logger.info(f"Retrieved {len(financial_data)} financial records")
             
@@ -75,7 +75,7 @@ class DataRetrievalAgent(BaseAgent):
         state["retrieved_data"] = retrieved_data
         return state
     
-    async def _query_financial_data(
+    async def _query_gold_data(
         self,
         query_analysis: Dict[str, Any]
     ) -> List[Dict[str, Any]]:
@@ -107,7 +107,7 @@ class DataRetrievalAgent(BaseAgent):
             self.logger.info(f"Cosmos DB SQL Query: {cosmos_query}")
             
             # Execute query
-            results = await self.cosmos_service.query_financial_data(
+            results = await self.cosmos_service.query_gold_data(
                 query=cosmos_query
             )
             

@@ -1,0 +1,4 @@
+email,name,preferences
+john.doe@example.com,John Doe,"{""theme"": ""dark"", ""notifications"": true}"
+jane.smith@example.com,Jane Smith,"{""theme"": ""light"", ""notifications"": false}"
+bob.wilson@example.com,Bob Wilson,"{""theme"": ""auto"", ""notifications"": true}"

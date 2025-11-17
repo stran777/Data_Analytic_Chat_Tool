@@ -37,7 +37,7 @@ async def execute_query(request: QueryRequest):
         logger.info(f"Executing analytics query for user: {request.user_id}")
         
         # Execute query
-        results = await cosmos_service.query_financial_data(
+        results = await cosmos_service.query_gold_data(
             request.query,
             filters=request.filters
         )

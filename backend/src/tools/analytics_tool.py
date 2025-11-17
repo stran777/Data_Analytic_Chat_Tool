@@ -45,7 +45,7 @@ class AnalyticsTool(BaseMCPTool):
             
             # Fetch data if needed
             if data is None and query:
-                data = await self.cosmos_service.query_financial_data(query)
+                data = await self.cosmos_service.query_gold_data(query)
             
             if not data:
                 return {

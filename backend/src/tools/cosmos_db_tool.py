@@ -41,11 +41,11 @@ class CosmosDBTool(BaseMCPTool):
             
             if query:
                 # Execute SQL query
-                results = await self.cosmos_service.query_financial_data(query)
+                results = await self.cosmos_service.query_gold_data(query)
             elif filters:
                 # Build query from filters
                 query = self._build_query_from_filters(filters)
-                results = await self.cosmos_service.query_financial_data(query)
+                results = await self.cosmos_service.query_gold_data(query)
             else:
                 return {
                     "success": False,

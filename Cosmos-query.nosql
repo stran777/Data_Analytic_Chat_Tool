@@ -1,0 +1,1 @@
+SELECT c.merchantNumber FROM c where c.pkType = 'cybersource:authorization'
