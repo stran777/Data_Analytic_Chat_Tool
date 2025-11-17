@@ -1,0 +1,27 @@
+<html>
+    <body>
+Certainly! Based on the sample financial transaction records you provided, here is a proposed schema or data dictionary describing each data field:\n\n---\n\n## Financial Transaction Data Schema\n\n| Field Name               | Description                                                   | Data Type       | Example Value                      |\n|--------------------------|---------------------------------------------------------------|-----------------|----------------------------------|\n| pkType                   | Primary key type or transaction type identifier               | String          | \"cybersource:authorization\"      |\n| cybersourceTransactionId | Unique transaction ID assigned by Cybersource payment gateway | String (numeric)| \"7628929303036392704806\"          |\n| sourceId                 | Unique identifier for the source or origin of the transaction | UUID String     | \"7ddf0b2e-e0ab-47d3-b03c-388fe9857b36\" |\n| merchantNumber           | Merchant identifier or merchant account number                | String          | \"payrilliumcardpresent001\"        |\n| cardNumber               | Masked card number used in the transaction                     | String          | \"411111xxxxxx1111\"                |\n\n---\n\n### Notes:\n- **pkType** seems to specify the type of transaction record, here consistently \"cybersource:authorization,\" which likely means an authorization event in the payment process.\n- **cybersourceTransactionId** is a unique identifier provided by the payment gateway (Cybersource).\n- **sourceId** appears to be a UUID identifying the transaction source, possibly a session, device, or user context.\n- **merchantNumber** identifies the merchant or account processing the transaction.\n- **cardNumber** is masked for security, showing only partial card digits.\n\nIf you have additional fields or need more detailed definitions (e.g., timestamps, amounts, statuses), please provide sample records or field names, and I can extend the schema accordingly.
+
+---
+
+## Financial Transaction Data Schema
+
+| Field Name               | Description                                                   | Data Type       | Example Value                      |
+|--------------------------|---------------------------------------------------------------|-----------------|----------------------------------|
+| pkType                   | Primary key type or transaction type identifier               | String          | \"cybersource:authorization\"      |
+| cybersourceTransactionId | Unique transaction ID assigned by Cybersource payment gateway | String (numeric)| \"7628929303036392704806\"          |
+| sourceId                 | Unique identifier for the source or origin of the transaction | UUID String     | \"7ddf0b2e-e0ab-47d3-b03c-388fe9857b36\" |
+| merchantNumber           | Merchant identifier or merchant account number                | String          | \"payrilliumcardpresent001\"        |
+| cardNumber               | Masked card number used in the transaction                     | String          | \"411111xxxxxx1111\"                |
+
+---
+
+### Notes:
+- **pkType** seems to specify the type of transaction record, here consistently \"cybersource:authorization,\" which likely means an authorization event in the payment process.
+- **cybersourceTransactionId** is a unique identifier provided by the payment gateway (Cybersource).
+- **sourceId** appears to be a UUID identifying the transaction source, possibly a session, device, or user context.
+- **merchantNumber** identifies the merchant or account processing the transaction.
+- **cardNumber** is masked for security, showing only partial card digits.
+
+If you have additional fields or need more detailed definitions (e.g., timestamps, amounts, statuses), please provide sample records or field names, and I can extend the schema accordingly.
+</body></html>

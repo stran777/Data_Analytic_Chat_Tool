@@ -96,13 +96,13 @@ class DataRetrievalAgent(BaseAgent):
             query_type = query_analysis.get("query_type", "")
             
             # Example query - customize based on your schema
-            if not self.cosmos_service.financial_data_container:
+            if not self.cosmos_service.gold_container:
                 self.logger.warning("Cosmos DB not configured, returning empty results")
                 return []
             
             # Simple query example
-            cosmos_query = "SELECT TOP 100 * FROM c ORDER BY c.timestamp DESC"
-            
+            cosmos_query = "SELECT TOP 100 * FROM c WHERE c.pkType = 'cybersource:authorization' ORDER BY c.timestamp DESC"
+
             # Log the SQL query
             self.logger.info(f"Cosmos DB SQL Query: {cosmos_query}")
             
