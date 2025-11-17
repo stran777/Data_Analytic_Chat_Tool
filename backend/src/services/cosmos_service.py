@@ -260,7 +260,18 @@ class CosmosDBService(LoggerMixin):
         """
         try:
             container = self._get_container(container_name)
-            result = await CosmosBulkOperations.bulk_create_items(container, items)
+            
+            # Determine partition key path based on container
+            if container_name == 'gold':
+                partition_key_path = 'pkType,pkFilter'  # Hierarchical partition key
+            else:
+                partition_key_path = 'partitionKey'  # Single partition key
+            
+            result = await CosmosBulkOperations.bulk_create_items(
+                container, 
+                items,
+                partition_key_path=partition_key_path
+            )
             self.logger.info(f"Bulk created {len(result)} items in {container_name} container")
             return result
         except Exception as e:
@@ -284,7 +295,18 @@ class CosmosDBService(LoggerMixin):
         """
         try:
             container = self._get_container(container_name)
-            result = await CosmosBulkOperations.bulk_upsert_items(container, items)
+            
+            # Determine partition key path based on container
+            if container_name == 'gold':
+                partition_key_path = 'pkType,pkFilter'  # Hierarchical partition key
+            else:
+                partition_key_path = 'partitionKey'  # Single partition key
+            
+            result = await CosmosBulkOperations.bulk_upsert_items(
+                container, 
+                items,
+                partition_key_path=partition_key_path
+            )
             self.logger.info(f"Bulk upserted {len(result)} items in {container_name} container")
             return result
         except Exception as e:
@@ -309,6 +331,9 @@ class CosmosDBService(LoggerMixin):
         """
         try:
             container = self._get_container(container_name)
+            
+            # Note: bulk_delete_items receives item_ids with partition key values already,
+            # so it doesn't need the partition_key_path parameter
             deleted_count = await CosmosBulkOperations.bulk_delete_items(container, item_ids)
             self.logger.info(f"Bulk deleted {deleted_count} items from {container_name} container")
             return deleted_count

@@ -23,7 +23,7 @@ class DataSeeder(LoggerMixin):
         self,
         file_path: str,
         container_name: str,
-        partition_key_field: str = "pkType,pkFilter",
+        partition_key_field: str = "partitionKey",
         id_field: str = "id",
         auto_generate_id: bool = True,
         auto_generate_partition_key: bool = False,
@@ -37,6 +37,7 @@ class DataSeeder(LoggerMixin):
             file_path: Path to the CSV or JSON file
             container_name: Name of the target container ('conversations', 'users', 'gold')
             partition_key_field: Name of the partition key field or comma-separated fields for hierarchical keys (default: 'partitionKey')
+                                 For gold container with hierarchical keys, use 'pkType,pkFilter'
             id_field: Name of the id field (default: 'id')
             auto_generate_id: Whether to auto-generate IDs if missing (default: True)
             auto_generate_partition_key: Whether to auto-generate partition keys if missing (default: False)
@@ -46,6 +47,10 @@ class DataSeeder(LoggerMixin):
         Returns:
             Dict with summary: {'success': int, 'failed': int, 'total': int, 'errors': List[str]}
         """
+        # Auto-detect hierarchical partition key for gold container
+        if container_name == 'gold' and partition_key_field == 'partitionKey':
+            partition_key_field = 'pkType,pkFilter'
+            self.logger.info("Gold container detected, using hierarchical partition key: pkType,pkFilter")
         path = Path(file_path)
         
         if not path.exists():
@@ -145,15 +150,38 @@ class DataSeeder(LoggerMixin):
             else:
                 raise ValueError(f"Missing required field: {id_field}")
         
-        # Handle partition key
-        if partition_key_field not in processed or not processed[partition_key_field]:
-            if partition_key_from_field and partition_key_from_field in processed:
-                # Copy from another field
-                processed[partition_key_field] = processed[partition_key_from_field]
-            elif auto_generate_partition_key:
-                processed[partition_key_field] = str(uuid.uuid4())
-            else:
-                raise ValueError(f"Missing required field: {partition_key_field}")
+        # Handle partition key (single or hierarchical)
+        if ',' in partition_key_field:
+            # Hierarchical partition key (e.g., "pkType,pkFilter")
+            pk_fields = [f.strip() for f in partition_key_field.split(',')]
+            
+            # Check if all hierarchical partition key fields exist
+            missing_fields = [f for f in pk_fields if f not in processed or processed[f] is None]
+            
+            if missing_fields:
+                if partition_key_from_field and partition_key_from_field in processed:
+                    # Copy from another field (only works for single partition key)
+                    self.logger.warning(
+                        f"Cannot copy from single field to hierarchical partition key. "
+                        f"Missing fields: {missing_fields}"
+                    )
+                    raise ValueError(f"Missing required hierarchical partition key fields: {missing_fields}")
+                elif auto_generate_partition_key:
+                    # Auto-generate missing hierarchical partition key fields
+                    for field in missing_fields:
+                        processed[field] = str(uuid.uuid4())
+                else:
+                    raise ValueError(f"Missing required hierarchical partition key fields: {missing_fields}")
+        else:
+            # Single partition key field
+            if partition_key_field not in processed or not processed[partition_key_field]:
+                if partition_key_from_field and partition_key_from_field in processed:
+                    # Copy from another field
+                    processed[partition_key_field] = processed[partition_key_from_field]
+                elif auto_generate_partition_key:
+                    processed[partition_key_field] = str(uuid.uuid4())
+                else:
+                    raise ValueError(f"Missing required field: {partition_key_field}")
         
         # Apply type conversions
         if type_mapping:

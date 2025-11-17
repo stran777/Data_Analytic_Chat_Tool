@@ -37,11 +37,14 @@ python seed_data.py --file sample_data/users.csv --container users --auto-id --p
 # Seed users from JSON
 python seed_data.py --file sample_data/users.json --container users --auto-id --partition-from id
 
-# Seed gold data from CSV (hierarchical partition keys: pkType, pkFilter)
+# Seed gold data from CSV (hierarchical partition keys auto-detected for gold container)
 python seed_data.py --file sample_data/gold_data.csv --container gold --auto-id
 
-# Seed gold data from JSON
+# Seed gold data from JSON (auto-detects hierarchical keys)
 python seed_data.py --file sample_data/gold_data.json --container gold --auto-id
+
+# Explicitly specify hierarchical partition key (optional, auto-detected for gold)
+python seed_data.py --file sample_data/gold_data.csv --container gold --auto-id --partition-key pkType,pkFilter
 
 # Legacy: Seed financial data (now goes to gold container)
 python seed_data.py --file sample_data/financial_data.csv --container gold --auto-id --partition-from symbol

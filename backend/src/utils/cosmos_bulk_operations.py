@@ -63,6 +63,8 @@ class CosmosBulkOperations:
             partition_key_path
         )
         
+        logger.info(f"Partitioned items: {[(pk, len(items_list)) for pk, items_list in partitioned_items.items()]}")
+        
         if len(partitioned_items) == 1:
             # Single partition - use atomic batch (most efficient)
             partition_key = next(iter(partitioned_items.keys()))
@@ -289,6 +291,9 @@ class CosmosBulkOperations:
         # Cosmos DB batch limit is 100 operations
         MAX_BATCH_SIZE = 100
         
+        # Convert tuple partition key to list for hierarchical keys
+        pk_for_batch = list(partition_key) if isinstance(partition_key, tuple) else partition_key
+        
         created_items = []
         
         for i in range(0, len(items), MAX_BATCH_SIZE):
@@ -298,7 +303,7 @@ class CosmosBulkOperations:
             try:
                 results = container.execute_item_batch(
                     batch_operations=operations,
-                    partition_key=partition_key
+                    partition_key=pk_for_batch
                 )
                 
                 for idx, result in enumerate(results):
