@@ -1,3 +1,0 @@
-pkType,pkFilter,sourceId,merchantName,mid,status,agentNumber,binNumber,officeName,processor,averageTransaction,largestTransaction,processingVolume,businessType,ownership,rating
-merchant:information,20251030,045627a4-416f-4e1a-ad0c-cafb9f5bd184,RANDYS TOWING AND RECOVERY,460400000000,CLOSED,E0044000000000,E004,E004 WNB P Propelr,VPC,550,1500,35000,Traditional,LLC Private,A
-cybersource:authorization,20251111,88b02c35-cd3b-4d44-84a5-8d018ff9748e,salequicktest001,,,,,,,100,,,,,
