@@ -1,10 +1,10 @@
 """
 LLM service for managing language model interactions.
-Supports multiple providers: OpenAI, Google Gemini, Anthropic Claude.
+Supports multiple providers: OpenAI, Azure OpenAI, Google Gemini, Anthropic Claude.
 """
 from typing import Any, Dict, List, Literal, Optional
 
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -20,7 +20,7 @@ class LLMService(LoggerMixin):
         Initialize LLM service.
         
         Args:
-            provider: LLM provider to use (openai, google, anthropic)
+            provider: LLM provider to use (openai, azure-openai, google, anthropic)
         """
         self.provider = provider or settings.default_llm_provider
         self._model = None
@@ -36,6 +36,15 @@ class LLMService(LoggerMixin):
                 temperature=settings.openai_temperature,
                 max_tokens=settings.openai_max_tokens,
                 api_key=settings.openai_api_key,
+            )
+        elif self.provider == "azure-openai":
+            self._model = AzureChatOpenAI(
+                azure_endpoint=settings.azure_openai_endpoint,
+                azure_deployment=settings.azure_openai_deployment_name,
+                api_version=settings.azure_openai_api_version,
+                api_key=settings.azure_openai_api_key,
+                temperature=settings.azure_openai_temperature,
+                max_tokens=settings.azure_openai_max_tokens,
             )
         elif self.provider == "google":
             self._model = ChatGoogleGenerativeAI(
