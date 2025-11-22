@@ -40,6 +40,14 @@ class Settings(BaseSettings):
     openai_temperature: float = Field(default=0.7, alias="OPENAI_TEMPERATURE")
     openai_max_tokens: int = Field(default=2000, alias="OPENAI_MAX_TOKENS")
 
+    # Azure OpenAI Configuration
+    azure_openai_endpoint: str = Field(default="", alias="AZURE_OPENAI_ENDPOINT")
+    azure_openai_api_key: str = Field(default="", alias="AZURE_OPENAI_API_KEY")
+    azure_openai_deployment_name: str = Field(default="gpt-4", alias="AZURE_OPENAI_DEPLOYMENT_NAME")
+    azure_openai_api_version: str = Field(default="2024-02-15-preview", alias="AZURE_OPENAI_API_VERSION")
+    azure_openai_temperature: float = Field(default=0.7, alias="AZURE_OPENAI_TEMPERATURE")
+    azure_openai_max_tokens: int = Field(default=2000, alias="AZURE_OPENAI_MAX_TOKENS")
+
     google_api_key: str = Field(default="", alias="GOOGLE_API_KEY")
     google_model: str = Field(default="gemini-pro", alias="GOOGLE_MODEL")
 
@@ -48,7 +56,7 @@ class Settings(BaseSettings):
         default="claude-3-opus-20240229", alias="ANTHROPIC_MODEL"
     )
 
-    default_llm_provider: Literal["openai", "google", "anthropic"] = Field(
+    default_llm_provider: Literal["openai", "azure-openai", "google", "anthropic"] = Field(
         default="openai", alias="DEFAULT_LLM_PROVIDER"
     )
 

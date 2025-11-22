@@ -80,9 +80,11 @@ async def system_info():
         "environment": settings.environment,
         "llm_providers": {
             "openai": settings.openai_api_key != "",
+            "azure-openai": settings.azure_openai_api_key != "",
             "google": settings.google_api_key != "",
             "anthropic": settings.anthropic_api_key != ""
         },
+        "default_llm_provider": settings.default_llm_provider,
         "services": {
             "cosmos_db": settings.cosmos_database_name,
             "vector_store": settings.vector_store_type,
