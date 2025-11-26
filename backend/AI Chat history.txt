@@ -734,14 +734,14 @@ CORS_ORIGINS=http://localhost:3000,http://localhost:3001
 
 # LLM Configuration (Choose one or configure multiple)
 # OpenAI
-OPENAI_API_KEY=
+OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_MODEL=gpt-4.1-mini
 OPENAI_TEMPERATURE=0.7
 OPENAI_MAX_TOKENS=2000
 
 # Azure OpenAI
 AZURE_OPENAI_ENDPOINT=https://azpro-ai-foundry.openai.azure.com/
-AZURE_OPENAI_API_KEY=
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key_here
 AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4.1-mini
 AZURE_OPENAI_API_VERSION=2025-01-01-preview
 AZURE_OPENAI_TEMPERATURE=0.7
@@ -760,7 +760,7 @@ DEFAULT_LLM_PROVIDER=azure
 
 # Azure Cosmos DB
 COSMOS_ENDPOINT=https://azpro-cosmos.documents.azure.com:443/
-COSMOS_KEY=
+COSMOS_KEY=your_cosmos_key_here
 COSMOS_DATABASE_NAME=cosmicworks
 COSMOS_CONTAINER_CONVERSATIONS=conversations
 COSMOS_CONTAINER_USERS=users
@@ -787,7 +787,7 @@ MCP_SERVER_PORT=5000
 # LangSmith (Optional - for debugging/tracing)
 LANGCHAIN_TRACING_V2=false
 LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
-LANGCHAIN_API_KEY=
+LANGCHAIN_API_KEY=your_langchain-api-key-here
 LANGCHAIN_PROJECT=data-analytics-chat
 
 # Session & Security
