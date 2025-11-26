@@ -12,7 +12,7 @@ class DataRetrievalAgent(BaseAgent):
     Agent responsible for retrieving relevant data.
     
     Tasks:
-    - Query Cosmos DB for financial data
+    - Query Cosmos DB for financial data using Hierarchical Partition Keys
     - Retrieve relevant context from vector store (RAG)
     - Format retrieved data for analysis
     """
@@ -34,85 +34,82 @@ class DataRetrievalAgent(BaseAgent):
             Updated state with retrieved_data
         """
         query_analysis = state.get("query_analysis", {})
-        reformulated_query = state.get("reformulated_query", "")
+        cosmos_query = state.get("cosmos_query", "")
+        query_parameters = state.get("query_parameters", [])
         
         self.logger.info("Retrieving relevant data")
         
         retrieved_data = {
             "financial_data": [],
-            "rag_context": "",
-            "rag_sources": [],
             "metadata": {}
         }
         
         try:
-            # Retrieve context from RAG if enabled
-            if self.rag_service and self.rag_service.vector_store:
-                rag_context, rag_sources = await self.rag_service.get_relevant_context(
-                    query=reformulated_query,
-                    max_tokens=1500
+            # Query financial data from Cosmos DB using dynamically generated query
+            if cosmos_query:
+                financial_data = await self._execute_cosmos_query(
+                    cosmos_query,
+                    query_parameters
                 )
-                retrieved_data["rag_context"] = rag_context
-                retrieved_data["rag_sources"] = rag_sources
-                self.logger.info(f"Retrieved {len(rag_sources)} RAG sources")
-            
-            # Query financial data from Cosmos DB
-            financial_data = await self._query_gold_data(query_analysis)
-            retrieved_data["financial_data"] = financial_data
-            self.logger.info(f"Retrieved {len(financial_data)} financial records")
+                retrieved_data["financial_data"] = financial_data
+                self.logger.info(f"Retrieved {len(financial_data)} financial records")
+            else:
+                self.logger.warning("No Cosmos DB query generated, skipping data retrieval")
             
             # Add metadata about retrieval
             retrieved_data["metadata"] = {
-                "rag_enabled": bool(retrieved_data["rag_context"]),
-                "financial_records_count": len(financial_data),
-                "sources_count": len(retrieved_data["rag_sources"])
+                "financial_records_count": len(retrieved_data["financial_data"]),
+                "query_executed": bool(cosmos_query),
+                "query": cosmos_query
             }
             
         except Exception as e:
-            self.logger.error(f"Error retrieving data: {e}")
+            self.logger.error(f"Error retrieving data: {e}", exc_info=True)
             retrieved_data["error"] = str(e)
+            retrieved_data["metadata"]["error"] = str(e)
         
         state["retrieved_data"] = retrieved_data
         return state
     
-    async def _query_gold_data(
+    async def _execute_cosmos_query(
         self,
-        query_analysis: Dict[str, Any]
+        query: str,
+        parameters: List[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """
-        Query financial data from Cosmos DB.
+        Execute a Cosmos DB NoSQL query.
         
         Args:
-            query_analysis: Analyzed query information
+            query: The Cosmos DB NoSQL query string
+            parameters: Query parameters
             
         Returns:
-            List of financial data records
+            List of query results
         """
         try:
-            # Build Cosmos DB query based on analysis
-            # This is a simplified example - in production, use proper query builder
-            intent = query_analysis.get("intent", "")
-            entities = query_analysis.get("entities", [])
-            query_type = query_analysis.get("query_type", "")
-            
-            # Example query - customize based on your schema
-            if not self.cosmos_service.financial_data_container:
-                self.logger.warning("Cosmos DB not configured, returning empty results")
+            # Check if gold container is initialized
+            if not self.cosmos_service.gold_container:
+                self.logger.warning("Gold container not configured, returning empty results")
                 return []
             
-            # Simple query example
-            cosmos_query = "SELECT TOP 100 * FROM c ORDER BY c.timestamp DESC"
+            self.logger.info(f"Executing Cosmos DB query:")
+            self.logger.info(f"  Query: {query}")
+            if parameters:
+                self.logger.info(f"  Parameters: {parameters}")
             
-            # Log the SQL query
-            self.logger.info(f"Cosmos DB SQL Query: {cosmos_query}")
-            
-            # Execute query
+            # Execute query using cosmos service
             results = await self.cosmos_service.query_gold_data(
-                query=cosmos_query
+                query=query,
+                parameters=parameters
             )
             
+            self.logger.info(f"Query executed successfully: {len(results)} items returned")
             return results
             
         except Exception as e:
-            self.logger.error(f"Error querying financial data: {e}")
+            self.logger.error(f"Error executing Cosmos DB query: {e}")
+            # Log diagnostic information for troubleshooting
+            self.logger.error(f"  Failed query: {query}")
+            if parameters:
+                self.logger.error(f"  Parameters: {parameters}")
             return []
