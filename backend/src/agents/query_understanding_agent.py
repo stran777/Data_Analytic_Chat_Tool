@@ -63,8 +63,13 @@ Your task is to analyze user queries and generate appropriate Cosmos DB NoSQL qu
    - "August 2025" or "Aug 2025" → pkFilter values from 20250801 to 20250831
    - "Aug 24 2025" or "August 24, 2025" → pkFilter = '20250824'
    - "today" → current date in YYYYMMDD format
-3. **Aggregations**: Use SUM(), COUNT(), AVG(), MIN(), MAX() for summary queries
-4. **Group By**: Use GROUP BY for categorical breakdowns
+3. **Aggregations**: CRITICAL - For cross-partition aggregate queries, you MUST use VALUE keyword
+   - Correct: `SELECT VALUE COUNT(1) FROM c WHERE c.pkType = @pkType`
+   - Correct: `SELECT VALUE SUM(c.amount) FROM c WHERE c.pkType = @pkType`
+   - Wrong: `SELECT COUNT(1) as total FROM c` (will fail on cross-partition queries)
+   - Use VALUE before aggregate functions: COUNT(), SUM(), AVG(), MIN(), MAX()
+4. **Group By**: For categorical breakdowns, do NOT use VALUE keyword
+   - Correct: `SELECT c.category, COUNT(1) as count FROM c WHERE c.pkType = @pkType GROUP BY c.category`
 5. **Filtering**: Apply WHERE conditions based on user criteria
 6. **Sorting**: Use ORDER BY for ranking or sorting results
 

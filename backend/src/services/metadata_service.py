@@ -56,32 +56,36 @@ class MetadataService(LoggerMixin):
                     },
                     "pkType": {
                         "type": "string",
-                        "description": "Partition key type indicating transaction category",
+                        "description": "Partition key type indicating data category or table. For example, 'repay:settlement' for settlement data or 'merchant:information' for merchant demographic details.",
                         "required": True,
                         "valid_values": [
                             "repay:settlement",
-                            "repay:refund",
-                            "payment:invoice",
-                            "payment:subscription"
+                            "merchant:information",
                         ],
                         "example": "repay:settlement"
                     },
                     "pkFilter": {
                         "type": "string",
-                        "description": "Partition key filter - typically date in YYYYMMDD format",
+                        "description": "Partition key filter - typically date in YYYYMMDD format. This represents the date of data ingestion.",
                         "required": True,
                         "format": "YYYYMMDD",
                         "example": "20250824",
                         "note": "Used for time-based partitioning"
                     },
                     "transactionDate": {
-                        "type": "datetime",
-                        "description": "Date and time when transaction occurred",
-                        "format": "ISO 8601",
-                        "example": "2025-08-24T14:30:00Z"
+                        "type": "integer",
+                        "description": "Date when transaction occurred - typically in YYYYMMDD format",
+                        "format": "YYYYMMDD",
+                        "example": "20250824"
                     },
-                    "amount": {
-                        "type": "number",
+                    "transactionTime": {
+                        "type": "string",
+                        "description": "Time when transaction occurred - typically in HH:MM:SS format",
+                        "format": "HH:MM:SS",
+                        "example": "14:30:00"
+                    },
+                    "transactionAmount": {
+                        "type": "Money",
                         "description": "Transaction amount in USD",
                         "range": {"min": 0, "max": 1000000},
                         "example": 1250.50
@@ -94,14 +98,21 @@ class MetadataService(LoggerMixin):
                     },
                     "status": {
                         "type": "string",
-                        "description": "Transaction status",
-                        "valid_values": ["pending", "completed", "failed", "cancelled"],
-                        "example": "completed"
+                        "description": "Merchant enrollment status",
+                        "valid_values": ["OPEN", "CLOSED", "REOPENED", "DELETED"],
+                        "example": "OPEN"
                     },
-                    "merchantId": {
+                    "mid": {
                         "type": "string",
-                        "description": "Merchant or vendor identifier",
-                        "example": "MERCH_001"
+                        "description": "Merchant identifier or number",
+                        "valid_values": ["123456789", "987654321"],
+                        "example": "498430293025"
+                    },
+                    "mid": {
+                        "type": "string",
+                        "description": "Merchant name or DBA name",
+                        "valid_values": ["JOHNSON-STRICKLAND", "STRICKLAND, MILLER AND HOFFMAN"],
+                        "example": "STRICKLAND, MILLER AND HOFFMAN"
                     },
                     "customerId": {
                         "type": "string",
@@ -129,12 +140,25 @@ class MetadataService(LoggerMixin):
                 },
                 "query_examples": [
                     {
+                        "description": "Get total merchants in the database",
+                        "query": ["SELECT c.pkType,COUNT(1) as total FROM c WHERE c.pkType = 'merchant:information' GROUP BY c.pkType",
+                                  "select VALUE count(1) from c where c.pkType = 'merchant:information'"]
+                    },
+                    {
+                        "description": "Find a merchant for a specific merchant id or number",
+                        "query": "SELECT * FROM c WHERE c.pkType = 'merchant:information' AND c.mid = '498430293025'"
+                    },
+                    {
+                        "description": "Find a merchant for a specific merchant name",
+                        "query": "SELECT * FROM c WHERE c.pkType = 'merchant:information' AND c.merchantName like '%STRICK%'"
+                    },
+                    {
                         "description": "Get all settlements for a specific date",
-                        "query": "SELECT * FROM c WHERE c.pkType = 'repay:settlement' AND c.pkFilter = '20250824'"
+                        "query": "SELECT * FROM c WHERE c.pkType = 'repay:settlement' AND c.transactionDate = '20250824'"
                     },
                     {
                         "description": "Get total transaction amount by status",
-                        "query": "SELECT c.status, SUM(c.amount) as total FROM c WHERE c.pkType = 'repay:settlement' GROUP BY c.status"
+                        "query": "SELECT c.status, SUM(c.transactionAmount) as total FROM c WHERE c.pkType = 'repay:settlement' GROUP BY c.status"
                     },
                     {
                         "description": "Count transactions by payment method",
@@ -142,11 +166,12 @@ class MetadataService(LoggerMixin):
                     },
                     {
                         "description": "Get high-value transactions over 1000",
-                        "query": "SELECT * FROM c WHERE c.pkType = 'repay:settlement' AND c.amount > 1000 ORDER BY c.amount DESC"
+                        "query": "SELECT * FROM c WHERE c.pkType = 'repay:settlement' AND c.transactionAmount > 1000 ORDER BY c.transactionAmount DESC"
                     }
                 ],
                 "business_context": {
                     "common_queries": [
+                        "Search merchant information",
                         "Daily transaction volumes",
                         "Transaction amounts by status",
                         "Payment method distribution",
