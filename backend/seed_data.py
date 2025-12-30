@@ -25,7 +25,8 @@ from pathlib import Path
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src.utils import DataSeeder, configure_logging
+from src.utils import configure_logging
+from src.utils.data_seeder import DataSeeder
 
 
 async def main():

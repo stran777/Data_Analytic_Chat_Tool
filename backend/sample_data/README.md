@@ -1,6 +1,6 @@
-# Data Seeder Utility
+# Data Management Utilities
 
-This utility allows you to bulk insert data into Azure Cosmos DB from CSV or JSON files.
+This directory contains utilities for managing data in Azure Cosmos DB, including bulk insert and deletion operations.
 
 ## Files Created
 
@@ -10,9 +10,11 @@ This utility allows you to bulk insert data into Azure Cosmos DB from CSV or JSO
    - `seed_gold_data_from_file()` - Convenience method for gold data (hierarchical partition keys)
    - `seed_financial_data_from_file()` - Legacy method (now uses gold container)
 
-2. **`seed_data.py`** - CLI script for command-line usage
+2. **`seed_data.py`** - CLI script for bulk inserting data from CSV/JSON files
 
-3. **`sample_data/`** - Example data files:
+3. **`delete_data.py`** - CLI script for deleting data by partition key filters
+
+4. **`sample_data/`** - Example data files:
    - `users.csv` / `users.json` - Sample user data
    - `gold_data.csv` / `gold_data.json` - Sample gold container data with hierarchical keys
    - `financial_data.csv` / `financial_data.json` - Legacy financial data samples
@@ -26,7 +28,9 @@ The `gold` container uses **hierarchical partition keys** with two levels:
 
 This allows for efficient querying across different data types while maintaining logical partitioning.
 
-## Usage
+---
+
+## Data Seeder Usage
 
 ### Option 1: CLI Script
 
@@ -52,6 +56,16 @@ python seed_data.py --file sample_data/financial_data.csv --container gold --aut
 # With type conversion for numeric fields
 python seed_data.py --file sample_data/gold_data.csv --container gold --auto-id --type-mapping '{"pkFilter": "int", "averageTransaction": "float", "mid": "int"}'
 ```
+### execution history
+```
+# 12/30/2025
+python seed_data.py --file "sample_data/synthetic_mif 3.json" --container gold --auto-id --partition-key pkType,pkFilter
+python seed_data.py --file "sample_data/synthetic_repay-settlement 3.json" --container gold --auto-id --partition-key pkType,pkFilter
+python seed_data.py --file "sample_data/synthetic_cyber_auth_3.json" --container gold --auto-id --partition-key pkType,pkFilter
+python seed_data.py --file "sample_data/synthetic_tsys_auth_3.json" --container gold --auto-id --partition-key pkType,pkFilter
+python seed_data.py --file "sample_data/synthetic_chargeback_3.json" --container gold --auto-id --partition-key pkType,pkFilter
+```
+
 
 ### Option 2: Python Code
 
@@ -173,4 +187,121 @@ All methods return a dictionary with:
     'total': 12,        # Total items in file
     'errors': [...]     # List of error messages
 }
+```
+
+---
+
+# Data Deleter Utility
+
+The data deleter utility allows you to safely delete data from Azure Cosmos DB containers by specifying partition key values.
+
+## Usage
+
+### CLI Script
+
+```powershell
+# Dry run - preview what will be deleted without actually deleting
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251122" --dry-run
+
+# Delete exact match with confirmation prompt (safe - requires typing "DELETE")
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "merchant123"
+
+# Delete with conditional criteria - all items where pkFilter >= value
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251122" --pk-filter-criteria ">="
+
+# Delete with conditional criteria - all items where pkFilter <= value
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251120" --pk-filter-criteria "<="
+
+# Delete with other operators (>, <, ==, !=)
+python delete_data.py --container gold --pk-type "cybersource:authorization" --pk-filter "20251115" --pk-filter-criteria ">"
+
+# Delete without confirmation (use with caution!)
+python delete_data.py --container gold --pk-type "cybersource:authorization" --pk-filter "merchant456" --no-confirm
+
+# Dry run with conditional criteria to preview multiple deletions
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251120" --pk-filter-criteria ">=" --dry-run
+```
+
+### Execution History
+```
+# 12/30/2025
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251122" --dry-run
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251120" --no-confirm
+```
+
+## Features
+
+✅ **Dry run mode** - Preview what will be deleted before committing  
+✅ **Confirmation prompt** - Requires typing "DELETE" to confirm deletion  
+✅ **Conditional deletion** - Use comparison operators (>=, <=, >, <, ==, !=) to delete multiple items  
+✅ **Partition key targeting** - Uses exact or conditional partition key values for efficient deletion  
+✅ **Comprehensive error handling** - Reports deleted, failed, and error details  
+✅ **Progress reporting** - Shows real-time deletion progress  
+
+## Parameters
+
+| Parameter | Description | Required |
+|-----------|-------------|----------|
+| `--container` | Target container name (conversations, users, gold) | Yes |
+| `--pk-type` | Value for pkType partition key | Yes |
+| `--pk-filter` | Value for pkFilter partition key | Yes |
+| `--pk-filter-criteria` | Comparison operator: `>=`, `<=`, `>`, `<`, `==`, `!=`. If not specified, exact match is used | No |
+| `--dry-run` | Preview only, don't delete | No |
+| `--no-confirm` | Skip confirmation prompt | No |
+
+## Return Value
+
+Returns a dictionary with:
+```python
+{
+    'deleted': 10,       # Number of items deleted successfully
+    'failed': 2,         # Number of items that failed to delete
+    'errors': [...]      # List of error messages
+}
+```
+
+## Safety Features
+
+⚠️ **Built-in Safety Mechanisms:**
+1. **Dry Run First** - Always test with `--dry-run` to see what will be deleted
+2. **Confirmation Required** - Must type "DELETE" to proceed (unless using `--no-confirm`)
+3. **Partition Key Scoped** - Only deletes items matching exact or conditional partition keys
+4. **Detailed Logging** - All operations are logged for audit purposes
+
+## Example Workflows
+
+### Exact Match Deletion
+```powershell
+# Step 1: Preview what will be deleted
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251122" --dry-run
+
+# Output: Would delete: 150 items
+
+# Step 2: Confirm and delete
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251122"
+
+# Prompt: Type 'DELETE' to confirm: DELETE
+
+# Output: 
+# ✅ Deletion completed!
+#    Deleted: 150
+#    Failed: 0
+```
+
+### Conditional Deletion (Multiple Items)
+```powershell
+# Step 1: Preview what will be deleted with >= operator
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251120" --pk-filter-criteria ">=" --dry-run
+
+# Output: Would delete: 450 items (all items where pkFilter >= 20251120)
+
+# Step 2: Confirm and delete
+python delete_data.py --container gold --pk-type "repay:settlement" --pk-filter "20251120" --pk-filter-criteria ">="
+
+# Prompt: Type 'DELETE' to confirm: DELETE
+
+# Output:
+# ✅ Deletion completed!
+#    Deleted: 450
+#    Failed: 0
 ```
